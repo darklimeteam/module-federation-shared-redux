@@ -30,19 +30,14 @@ module.exports = {
       library: { type: 'global', name: 'store' },
       exposes: {
         './Store': './src/store',
-        './updateCurrentSettings': './src/store',
-        './getSettingsState': './src/store',
       },
       shared: {
-        '@reduxjs': { singleton: false, eager: true },
-        effector: { singleton: true },
-        'effector-vue': { singleton: true },
+        '@reduxjs': { singleton: false, eager: true }
       },
     }),
     new HtmlWebpackPlugin({
       title: "Project Title",
       template: "./src/index.html",
-      inject: true,
     })
   ],
 };

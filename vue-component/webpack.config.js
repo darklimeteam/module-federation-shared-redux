@@ -75,8 +75,6 @@ module.exports = (env = {}) => ({
           eager: true,
           requiredVersion: deps.vue,
         },
-        effector: { singleton: true },
-        'effector-vue': { singleton: true },
         'styled-components': { singleton: true },
       },
     }),

@@ -1,31 +1,10 @@
 
-import {configureStore} from '@reduxjs/toolkit';
+import { configureStore, createSelector } from '@reduxjs/toolkit';
+import { Observable } from 'rxjs';
 
 const UPDATE_SETTINGS = '[settings] Update settings';
+const DEFAAULT_SETTINGS_VALUE = 1;
 
-//can't be used, this is JS
-//should be covered by Unit tests
-// enum SettingsOptions {
-//  Show = "SHOW",
-//  SendViaEmail = "SEND_VIA_EMAIL",
-//  TurnOff = "TURN_OFF"
-// }
-
-// export enum SettingsOptions {
-//     SHOW,
-//     SEND_VIA_EMAIL,
-//     NOT_SHOW
-// }
-
-// Dispatch binding functions
-const bindUpdateSettings = (selectedOption) => Store.dispatch(updateSettings(selectedOption));
-
-
-export function updateCurrentSettings(selectedOption) {
-    bindUpdateSettings(selectedOption);
-}
-
-// Increase total todo count
 function updateSettings(currentSettingsValue){
     return {
         type: 'UPDATE_SETTINGS',
@@ -33,18 +12,26 @@ function updateSettings(currentSettingsValue){
     }
 }
 
+const bindUpdateSettings = (selectedOption) => Store.dispatch(updateSettings(selectedOption));
+
+export function updateCurrentSettings(selectedOption) {
+    console.log('updateCurrentSettings', selectedOption);
+    bindUpdateSettings(selectedOption);
+}
+
+// export const settingsSelector = createSelector(getSettingsState, (value) => value);
 export function getSettingsState() {
     return Store.getState().currentSettingsValue;
 }
 
+//const getSettingsState = state => state.currentSettingsValue;
+
+//export const settingsSelector = createSelector(getSettingsState);
+
+
 const Store = configureStore({ reducer: reducer_SETTINGS_update });
 
-//can be used for test purpose 
-//export const SOME_VALUE = 'value from store';
-   
-console.log(Store.getState());
-
-function reducer_SETTINGS_update(state = {currentSettingsValue: 1}, action){
+function reducer_SETTINGS_update(state = {currentSettingsValue: DEFAAULT_SETTINGS_VALUE}, action){
     switch(action.type){
         case 'UPDATE_SETTINGS':
             return {...state, currentSettingsValue: action.payload};
@@ -53,5 +40,4 @@ function reducer_SETTINGS_update(state = {currentSettingsValue: 1}, action){
     }
 }
 
-// export default storeSettings;
 export default Store;

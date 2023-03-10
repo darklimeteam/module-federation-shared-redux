@@ -2,20 +2,16 @@ import { Component, OnInit } from "@angular/core";
 import { Observable } from "rxjs";
 import { IUser } from "./models/user";
 import { SettingsOptions } from "./enums/settings";
-import { SettingsService } from "./settings/settings.service";
-
 @Component({
   selector: "app-root",
   templateUrl: "./app.component.html",
   styleUrls: ["./app.component.scss"],
 })
 export class AppComponent implements OnInit {
-  currentUser$: Observable<IUser> = new Observable();
-  notificationSettings$: Observable<SettingsOptions> =
-    this.settingsService.currentSettings$;
+  store$!: any;
   selectedNotificationMode: SettingsOptions = SettingsOptions.SHOW;
 
-  constructor(private settingsService: SettingsService) {}
+  constructor() {}
 
   public get selectedNotificationModeText(): string {
     switch (this.selectedNotificationMode) {
@@ -29,8 +25,21 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.notificationSettings$.subscribe((settings) => {
-      this.selectedNotificationMode = settings;
+    import("store/Store").then((val) => {
+      // get initial state of settings
+      this.selectedNotificationMode =
+        val.default.getState().currentSettingsValue;
+
+      // subscribe to changes of settings
+      this.store$ = val.default;
+      this.store$.subscribe(() => {
+        this.selectedNotificationMode =
+          val.default.getState().currentSettingsValue;
+      });
     });
+  }
+
+  ngOnDestroy(): void {
+    this.store$.unsubscribe();
   }
 }
